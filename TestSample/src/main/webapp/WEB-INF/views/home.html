@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  
+</head>
+<body>
+<h1>
+	Hello world!  
+</h1>
+<h2 th:text="'Hello ' + ${name} + '!'+ ${serverTime}"></h2>
+<div th:if="${langList != null}">
+    <h1>Result</h1>
+    <ul>
+    <th:block>
+       <li th:each="item : *{langList}" th:text="${item}"></li>
+    </th:block>
+    </ul>
+</div>
+
+<div  th:if="${javaSkillList != null}">
+    <div>
+    Found List of  records  
+    </div>
+    <table>        
+        <tbody>
+            <tr th:each="row : ${javaSkillList}"> 
+                <td th:text="${row.value}"></td> 
+            </tr> 
+        </tbody>
+    </table>
+</div>
+    
+    <h2>All Users in System</h2>
+ 
+    <table border="1">
+        <tr>
+            <th>User Name</th>
+            <th>User Age</th>
+        </tr>
+        <tr>
+                <td th:text="${users.name}"></td>
+                <td th:text="${users.age}"></td>
+        </tr>
+    </table>
+    
+     <table border="1">
+        <tr>
+            <th>User Name</th>
+            <th>User Age</th>
+        </tr>
+            <tr th:each="row : ${userList}">
+                <td th:text="${row.name}"></td>
+                <td th:text="${row.age}"></td>
+            </tr>
+    </table>
+
+	<!-- <div th:object="${user}">
+		<select id="userList" name="userList">
+			<option value="">-- Select User --</option>
+			<option th:each="user : ${userList}" th:value="${user.id}"
+				th:text="${user.name}"></option>
+		</select>
+	</div> -->
+	
+	<div th:object="${user}">
+		<select id="userList" name="userList" th:multiple="multiple">
+			<option value="">-- Select User --</option>
+			<option onclick="getOption()" th:each="user : ${userList}" th:value="${user.id}"
+				th:text="${user.name}"></option>
+		</select>
+		
+		<select id="userListNew" name="userListNew" th:multiple="multiple">
+			<option id="id1"></option>
+		</select>
+		
+		<!-- <p> 
+        The value of the option selected is:  
+        <span id="id1"></span> 
+    </p>  -->
+      
+   <!--  <button onclick="getOption()"> 
+        Check option 
+    </button>  -->
+      
+    <script type="text/javascript">
+        function getOption() { 
+            selectElement = document.querySelector('#userList'); 
+                      
+            output =  
+              selectElement.options[selectElement.selectedIndex].text; 
+            
+            /* List opList;
+            opList.add(output); */
+  
+            document.querySelector('#id1').textContent = output; 
+          //  document.querySelector('#id1').textContent = opList; 
+        } 
+        
+        ("#selectCategory").change(function(){
+            var categoryId = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "/categories/" + categoryId,
+                success: function(data){
+                    var slctSubcat=$('#selectSubcat'), option="";
+                    slctSubcat.empty();
+
+                    for(var i=0; i<data.length; i++){
+                        option = option + "<option value='"+data[i].id + "'>"+data[i].subcateogory_name + "</option>";
+                    }
+                    slctSubcat.append(option);
+                },
+                error:function(){
+                    alert("error");
+                }
+
+            });
+        });
+    </script> 
+	</div>
+
+	<!-- <form id="post_project" action="/post_project" method="post"
+		modelAttribute="projectForm"> -->
+	<form action="#" th:action="@{/categories/{categoryId}}" method="post">
+		<select id="selectCategory" name="selectCategory">
+			<option value="">-Select-</option>
+			<option th:each="category : ${categoryList}"
+				th:value="${category.id}" th:text="${category.name}"></option>
+		</select>
+	</form>
+
+	<form>
+		<select id="selectSubcat" >
+			<option value="-1" label="-Select-" />
+		</select>		
+	</form>
+
+	<!--  <table border="1">
+        <tr>
+        	<th>User Id</th>
+            <th>User Name</th>
+            <th>User Age</th>
+        </tr>
+            <tr th:each="row : ${userMap}">
+            	<td th:text="${row.key}"></td>
+            	 <td th:text="${row.value.name}"></td>
+            	 <td th:text="${row.value.age}"></td>
+                
+            </tr>
+    </table>  -->
+
+</body>
+</html>
